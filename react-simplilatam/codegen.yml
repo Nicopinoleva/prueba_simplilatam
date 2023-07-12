@@ -1,0 +1,30 @@
+schema: ${SCHEMA_PATH}
+overwrite: true
+documents: '**/*.graphql'
+generates:
+  src/hooks/generated.ts:
+    plugins:
+      - add:
+          content: "import { GraphQLError } from 'graphql';"
+      - typescript
+      - typescript-operations
+      - typescript-react-query
+    config:
+      fetcher: '@/helpers/fetcher#fetchData'
+      exposeDocument: true
+      errorType: GraphQLError
+      skipTypename: true
+      avoidOptionals: true
+      namingConvention:
+        enumValues: keep
+      scalars:
+        Date: string
+        DateTime: string | Date
+        GenericScalar: unknown
+        JSONString: string
+        Upload: File
+        Decimal: number
+hooks:
+  afterAllFileWrite:
+    - eslint --fix
+    - prettier --write

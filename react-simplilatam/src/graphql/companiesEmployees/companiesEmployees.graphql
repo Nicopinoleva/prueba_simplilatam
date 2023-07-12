@@ -1,0 +1,48 @@
+query GetCompanies {
+  getCompanies {
+    id
+    address
+    name
+    rut
+    phoneNumber
+  }
+}
+
+query GetEmployees {
+  getEmployees {
+    id
+    name
+    rut
+    email
+    company {
+      name
+    }
+  }
+}
+
+mutation CreateCompany(
+  $name: String!
+  $address: String!
+  $rut: String!
+  $phoneNumber: String!
+) {
+  createCompany(
+    name: $name
+    address: $address
+    rut: $rut
+    phoneNumber: $phoneNumber
+  ) {
+    success
+  }
+}
+
+mutation CreateEmployee(
+  $name: String!
+  $companyId: Int!
+  $rut: String!
+  $email: String!
+) {
+  createEmployee(name: $name, companyId: $companyId, rut: $rut, email: $email) {
+    success
+  }
+}

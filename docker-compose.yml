@@ -1,0 +1,80 @@
+version: "3.8"
+
+services:
+  django:
+    image: "django:dev"
+    build:
+      context: .
+      dockerfile: ./django/Dockerfile
+      args:
+        - ENVIRONMENT=local
+    command: sh -c "pdm install --no-editable && pdm run python manage.py runserver 0.0.0.0:8000"
+    container_name: django
+    restart: "no"
+    volumes:
+      - "./django-simplilatam:/app:rw"
+      - "./pdm.lock:/pdm.lock"
+      - "./pyproject.toml:/pyproject.toml"
+    ports:
+      - "8000:8000"
+      - "9000:9000"
+      - "6000:6000"
+    env_file:
+      - .env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "10"
+    networks:
+      simplilatam-dev-net:
+
+  postgresql:
+    image: postgres:latest
+    container_name: postgresql
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      simplilatam-dev-net:
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: unless-stopped
+    env_file:
+      - ./react-simplilatam/.env
+    ports:
+      - "80:80"
+    volumes:
+      - "./nginx:/etc/nginx:rw"
+    networks:
+      simplilatam-dev-net:
+
+  react:
+    image: "react:dev"
+    build:
+      dockerfile: ./react-simplilatam/Dockerfile.dev
+      context: .
+    container_name: react
+    command: sh -c "npm i && npm start"
+    ports:
+      - "3000:3000"
+    volumes:
+      - "./react-simplilatam:/app:rw"
+    env_file:
+      - ./react-simplilatam/.env
+    networks:
+      simplilatam-dev-net:
+
+volumes:
+  db:
+    driver: local
+
+networks:
+  simplilatam-dev-net:
+    name: simplilatam-dev-net
