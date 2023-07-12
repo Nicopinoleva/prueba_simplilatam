@@ -24,6 +24,6 @@ make up_django
 make up_postgresql
 make up_nginx
 ```
---Levanta todos los componentes y la aplicación estaría lista para su uso.
+-Levanta todos los componentes y la aplicación estaría lista para su uso.
 
 - Configurar .env: Se deben incluir credenciales de acceso a la bdd en el .env.
