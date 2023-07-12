@@ -26,4 +26,5 @@ make up_nginx
 ```
 -Levanta todos los componentes y la aplicación estaría lista para su uso.
 
-- Configurar .env: Se deben incluir credenciales de acceso a la bdd en el .env.
+# Configurar .env
+Se deben incluir credenciales de acceso a la bdd en el .env.
