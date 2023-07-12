@@ -12,8 +12,8 @@ class CreateEmployee(graphene.Mutation):
         email = graphene.String(required=True)
         company_id = graphene.Int(required=True)
 
-    success = graphene.Boolean()
-    message = graphene.String()
+    success = graphene.Boolean(required=True)
+    message = graphene.String(required=True)
 
     @transaction.atomic
     def mutate(self, info, **kwargs):
@@ -28,7 +28,7 @@ class CreateEmployee(graphene.Mutation):
                 rut=rut,
                 company_id=company,
             )
-            return CreateEmployee(success=True, message="")
+            return CreateEmployee(success=True, message="Ok")
         except IntegrityError:
             transaction.set_rollback(True)
             return CreateEmployee(success=False, message="Rut ya existe.")

@@ -14,8 +14,8 @@ class CreateCompany(graphene.Mutation):
         rut = graphene.String(required=True)
         phone_number = graphene.String(required=True)
 
-    success = graphene.Boolean()
-    message = graphene.String()
+    success = graphene.Boolean(required=True)
+    message = graphene.String(required=True)
 
     @transaction.atomic
     def mutate(self, info, **kwargs):
@@ -30,7 +30,7 @@ class CreateCompany(graphene.Mutation):
                 rut=rut,
                 phone_number=phone_number,
             )
-            return CreateCompany(success=True, message="")
+            return CreateCompany(success=True, message="Ok")
         except IntegrityError:
             transaction.set_rollback(True)
             return CreateCompany(success=False, message="Rut ya existe.")

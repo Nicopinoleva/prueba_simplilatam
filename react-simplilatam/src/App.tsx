@@ -1,8 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { RouterProvider } from "react-router-dom";
-import { router } from "./Routes";
-import { Companies } from "./views/companies/Companies";
 import { Home } from "./views/home/Home";
+import { ThemeProvider, createTheme } from "@mui/material";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,8 +15,12 @@ const queryClient = new QueryClient({
   },
 });
 
+const defaultTheme = createTheme();
+
 export const App = () => (
   <QueryClientProvider client={queryClient}>
-    <Home />
+    <ThemeProvider theme={defaultTheme}>
+      <Home />
+    </ThemeProvider>
   </QueryClientProvider>
 );

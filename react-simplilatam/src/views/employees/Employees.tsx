@@ -7,18 +7,24 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useGetEmployeesQuery } from "../../hooks/generated";
-import { Stack, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import { CreateEmployeeForm } from "./CreateEmployeeForm";
+import { useState } from "react";
 
 export const Employees = () => {
   const { data, isLoading } = useGetEmployeesQuery();
+  const [openDialog, setOpenDialog] = useState(false);
   return (
     <>
       {isLoading ? (
         <Typography>Cargando!</Typography>
       ) : (
         <Stack direction="column">
-          <CreateEmployeeForm />
+          <Button onClick={() => setOpenDialog(true)}>Añadir Empleado</Button>
+          <CreateEmployeeForm
+            openDialog={openDialog}
+            setOpenDialog={setOpenDialog}
+          />
           {data?.getEmployees?.length && (
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 700 }} aria-label="customized table">

@@ -30,13 +30,13 @@ export type CompaniesType = {
 };
 
 export type CreateCompany = {
-  message: Maybe<Scalars['String']['output']>;
-  success: Maybe<Scalars['Boolean']['output']>;
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
 };
 
 export type CreateEmployee = {
-  message: Maybe<Scalars['String']['output']>;
-  success: Maybe<Scalars['Boolean']['output']>;
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
 };
 
 export type EmployeesType = {
@@ -93,7 +93,7 @@ export type CreateCompanyMutationVariables = Exact<{
 }>;
 
 
-export type CreateCompanyMutation = { createCompany: { success: boolean | null, message: string | null } | null };
+export type CreateCompanyMutation = { createCompany: { success: boolean, message: string } | null };
 
 export type CreateEmployeeMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -103,7 +103,7 @@ export type CreateEmployeeMutationVariables = Exact<{
 }>;
 
 
-export type CreateEmployeeMutation = { createEmployee: { success: boolean | null, message: string | null } | null };
+export type CreateEmployeeMutation = { createEmployee: { success: boolean, message: string } | null };
 
 
 export const GetCompaniesDocument = `

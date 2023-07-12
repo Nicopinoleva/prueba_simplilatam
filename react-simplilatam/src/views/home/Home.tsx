@@ -2,6 +2,7 @@ import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
+import HomeIcon from "@mui/icons-material/Home";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
@@ -29,82 +30,88 @@ const AppBar = styled(
 const SideBarMenu = styled(
   MuiDrawer,
   {}
-)(() => ({
+)(({ theme }) => ({
   "& .MuiDrawer-paper": {
     position: "relative",
-    width: 240,
+    width: "100%",
+    [theme.breakpoints.up("md")]: {
+      width: 240,
+    },
   },
 }));
-
-const defaultTheme = createTheme();
 
 export const Home = () => {
   const [activeScreen, setActiveScreen] = useState(0);
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Box sx={{ display: "flex" }}>
-        <CssBaseline />
-        <AppBar position="absolute">
-          <Toolbar
-            sx={{
-              pr: "24px",
-            }}
-          >
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
-              Tu Empleado Perfecto
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <SideBarMenu variant="permanent">
-          <Toolbar
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              px: [1],
-            }}
-          />
-          <Divider />
-          <List component="nav">
-            <ListItemButton onClick={() => setActiveScreen(0)}>
-              <ListItemIcon>
-                <AddBusinessIcon />
-              </ListItemIcon>
-              <ListItemText primary="Empresas" />
-            </ListItemButton>
-            <ListItemButton onClick={() => setActiveScreen(1)}>
-              <ListItemIcon>
-                <BadgeIcon />
-              </ListItemIcon>
-              <ListItemText primary="Empleados" />
-            </ListItemButton>
-          </List>
-        </SideBarMenu>
-        <Box
-          component="main"
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
+      <AppBar position="absolute">
+        <Toolbar
           sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: "100vh",
-            overflow: "auto",
+            pr: "24px",
           }}
         >
-          <Toolbar />
-          <Stack sx={{ mt: 4, mb: 4 }}>
-            {activeScreen === 0 && <Companies />}
-            {activeScreen === 1 && <Employees />}
-          </Stack>
-        </Box>
+          <Typography
+            component="h1"
+            variant="h6"
+            color="inherit"
+            noWrap
+            sx={{ flexGrow: 1 }}
+          >
+            Tu Empleado Perfecto
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <SideBarMenu variant="permanent">
+        <Toolbar
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            px: [1],
+          }}
+        />
+        <Divider />
+        <List component="nav">
+          <ListItemButton onClick={() => setActiveScreen(0)}>
+            <ListItemIcon>
+              <HomeIcon />
+            </ListItemIcon>
+            <ListItemText primary="Home" />
+          </ListItemButton>
+          <ListItemButton onClick={() => setActiveScreen(1)}>
+            <ListItemIcon>
+              <AddBusinessIcon />
+            </ListItemIcon>
+            <ListItemText primary="Mis empresas" />
+          </ListItemButton>
+          <ListItemButton onClick={() => setActiveScreen(2)}>
+            <ListItemIcon>
+              <BadgeIcon />
+            </ListItemIcon>
+            <ListItemText primary="Mis empleados" />
+          </ListItemButton>
+        </List>
+      </SideBarMenu>
+      <Box
+        component="main"
+        sx={{
+          backgroundColor: (theme) =>
+            theme.palette.mode === "light"
+              ? theme.palette.grey[100]
+              : theme.palette.grey[900],
+          width: "100%",
+          height: "100vh",
+          overflow: "auto",
+        }}
+      >
+        <Toolbar />
+        <Stack sx={{ mt: 4, mb: 4 }}>
+          {activeScreen === 0 && <Typography> Bienvenido! </Typography>}
+          {activeScreen === 1 && <Companies />}
+          {activeScreen === 2 && <Employees />}
+        </Stack>
       </Box>
-    </ThemeProvider>
+    </Box>
   );
 };
