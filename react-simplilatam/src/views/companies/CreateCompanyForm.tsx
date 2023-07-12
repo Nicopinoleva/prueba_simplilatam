@@ -4,6 +4,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useCreateCompanyMutation } from "../../hooks/generated";
 import { useQueryClient } from "@tanstack/react-query";
 import { rutValidate } from "../../helpers/validators";
+import { useState } from "react";
 
 type FormInput = {
   name: string;
@@ -28,15 +29,21 @@ export const CreateCompanyForm = () => {
     },
   });
 
+  const [createCompanyError, setCreateCompanyError] = useState("");
+
   const queryClient = useQueryClient();
 
   const { mutate: createCompanyMutate } = useCreateCompanyMutation({
-    onSuccess: async () => {
-      resetField("name");
-      resetField("address");
-      resetField("rut");
-      resetField("phoneNumber");
-      await queryClient.invalidateQueries();
+    onSuccess: async (data) => {
+      if (!data.createCompany?.success) {
+        setCreateCompanyError(data?.createCompany?.message || "");
+      } else {
+        resetField("name");
+        resetField("address");
+        resetField("rut");
+        resetField("phoneNumber");
+        await queryClient.invalidateQueries();
+      }
     },
     onError: (error) => {
       alert(JSON.stringify(error));
@@ -92,7 +99,13 @@ export const CreateCompanyForm = () => {
         <Controller
           control={control}
           name="rut"
-          render={({ field }) => <TextField {...field} label="RUT" />}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="RUT"
+              onClick={() => setCreateCompanyError("")}
+            />
+          )}
           rules={{
             required: "Campo requerido.",
             validate: {
@@ -124,9 +137,18 @@ export const CreateCompanyForm = () => {
           </Typography>
         )}
       </Stack>
-      <LoadingButton variant="contained" type="submit" form="createCompanyForm">
-        Crear empresa!
-      </LoadingButton>
+      <Stack>
+        <LoadingButton
+          variant="contained"
+          type="submit"
+          form="createCompanyForm"
+        >
+          Crear empresa!
+        </LoadingButton>
+        {createCompanyError && (
+          <Typography color="error.dark">{createCompanyError}</Typography>
+        )}
+      </Stack>
     </Stack>
   );
 };

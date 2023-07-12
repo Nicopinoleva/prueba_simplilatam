@@ -1,29 +1,13 @@
 import { LoadingButton } from "@mui/lab";
 import { Stack, TextField, Typography, MenuItem, Select } from "@mui/material";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import {
-  Controller,
-  NestedValue,
-  SubmitHandler,
-  useForm,
-} from "react-hook-form";
-import {
-  GetCompaniesQuery,
   useCreateEmployeeMutation,
   useGetCompaniesQuery,
 } from "../../hooks/generated";
-import {
-  QueryObserverResult,
-  RefetchOptions,
-  RefetchQueryFilters,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { GraphQLError } from "graphql";
-import ReactSelect from "react-select";
-import {
-  emailValidate,
-  rutFormater,
-  rutValidate,
-} from "../../helpers/validators";
+import { useQueryClient } from "@tanstack/react-query";
+import { emailValidate, rutValidate } from "../../helpers/validators";
+import { useState } from "react";
 
 type FormInput = {
   name: string;
@@ -33,12 +17,12 @@ type FormInput = {
 };
 
 export const CreateEmployeeForm = () => {
-  const { data, isLoading } = useGetCompaniesQuery();
+  const { data } = useGetCompaniesQuery();
+  const [createEmployeeError, setCreateEmployeeError] = useState("");
   const {
     control,
     handleSubmit,
     resetField,
-    setValue,
     formState: { errors },
   } = useForm<FormInput>({
     mode: "onChange",
@@ -53,12 +37,16 @@ export const CreateEmployeeForm = () => {
   const queryClient = useQueryClient();
 
   const { mutate: createEmployeeMutate } = useCreateEmployeeMutation({
-    onSuccess: async () => {
-      resetField("name");
-      resetField("email");
-      resetField("rut");
-      resetField("companyId");
-      await queryClient.invalidateQueries();
+    onSuccess: async (data) => {
+      if (!data.createEmployee?.success) {
+        setCreateEmployeeError(data?.createEmployee?.message || "");
+      } else {
+        resetField("name");
+        resetField("email");
+        resetField("rut");
+        resetField("companyId");
+        await queryClient.invalidateQueries();
+      }
     },
     onError: (error) => {
       alert(JSON.stringify(error));
@@ -101,7 +89,13 @@ export const CreateEmployeeForm = () => {
         <Controller
           control={control}
           name="rut"
-          render={({ field }) => <TextField {...field} label="RUT" />}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="RUT"
+              onClick={() => setCreateEmployeeError("")}
+            />
+          )}
           rules={{
             required: "Campo requerido.",
             validate: {
@@ -146,13 +140,18 @@ export const CreateEmployeeForm = () => {
         name="companyId"
         control={control}
       ></Controller>
-      <LoadingButton
-        variant="contained"
-        type="submit"
-        form="createEmployeeyForm"
-      >
-        Crear empleado!
-      </LoadingButton>
+      <Stack>
+        <LoadingButton
+          variant="contained"
+          type="submit"
+          form="createEmployeeyForm"
+        >
+          Crear empleado!
+        </LoadingButton>
+        {createEmployeeError && (
+          <Typography color="error.dark">{createEmployeeError}</Typography>
+        )}
+      </Stack>
     </Stack>
   );
 };

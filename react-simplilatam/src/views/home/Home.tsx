@@ -57,7 +57,7 @@ export const Home = () => {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Prueba SimpliLatam
+              Tu Empleado Perfecto
             </Typography>
           </Toolbar>
         </AppBar>

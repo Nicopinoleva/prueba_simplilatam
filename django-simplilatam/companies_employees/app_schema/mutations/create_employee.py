@@ -1,4 +1,5 @@
 import graphene
+from django.db import IntegrityError
 from django.db import transaction
 from graphql.error import GraphQLError
 from companies_employees.models.employees import Employees
@@ -12,6 +13,7 @@ class CreateEmployee(graphene.Mutation):
         company_id = graphene.Int(required=True)
 
     success = graphene.Boolean()
+    message = graphene.String()
 
     @transaction.atomic
     def mutate(self, info, **kwargs):
@@ -26,7 +28,10 @@ class CreateEmployee(graphene.Mutation):
                 rut=rut,
                 company_id=company,
             )
-            return CreateEmployee(success=True)
+            return CreateEmployee(success=True, message="")
+        except IntegrityError:
+            transaction.set_rollback(True)
+            return CreateEmployee(success=False, message="Rut ya existe.")
         except Exception:
             transaction.set_rollback(True)
             raise GraphQLError("Ha ocurrido un error. Por favor intenta más tarde.")

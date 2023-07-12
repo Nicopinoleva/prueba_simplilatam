@@ -33,6 +33,7 @@ mutation CreateCompany(
     phoneNumber: $phoneNumber
   ) {
     success
+    message
   }
 }
 
@@ -44,5 +45,6 @@ mutation CreateEmployee(
 ) {
   createEmployee(name: $name, companyId: $companyId, rut: $rut, email: $email) {
     success
+    message
   }
 }
