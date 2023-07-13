@@ -96,18 +96,13 @@ export const Home = () => {
       <Box
         component="main"
         sx={{
-          backgroundColor: (theme) =>
-            theme.palette.mode === "light"
-              ? theme.palette.grey[100]
-              : theme.palette.grey[900],
           width: "100%",
           height: "100vh",
           overflow: "auto",
         }}
       >
-        <Toolbar />
-        <Stack sx={{ mt: 4, mb: 4 }}>
-          {activeScreen === 0 && <Typography> Bienvenido! </Typography>}
+        <Stack sx={{ mt: 10, ml: 40}}>
+          {activeScreen === 0 && <Typography fontSize={30} align='center'> ¡Bienvenido! </Typography>}
           {activeScreen === 1 && <Companies />}
           {activeScreen === 2 && <Employees />}
         </Stack>
